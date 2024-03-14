@@ -1,0 +1,1 @@
+Files installed as part of SketchOS

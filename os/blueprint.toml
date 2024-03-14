@@ -1,4 +1,4 @@
-'$schema' = "../blueprint/schema.json"
+'$schema' = "https://github.com/Perodactyl/Sketch/raw/main/blueprint/schema.json"
 type = "package"
 
 [package]
