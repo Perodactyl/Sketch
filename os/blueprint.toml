@@ -1,0 +1,15 @@
+'$schema' = "../blueprint/schema.json"
+type = "package"
+
+[package]
+name = "SketchOS"
+version = "0.0.0"
+
+[package.author]
+name = "Perodactyl"
+prefer = "Github"
+Github = "https://github.com/Perodactyl"
+
+[package.blueprint]
+target = "$OS"
+files = ["EFI.lua", "init.lua", "pixel.lua"]

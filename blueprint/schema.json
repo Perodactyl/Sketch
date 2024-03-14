@@ -1,0 +1,128 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"description": "Schema for blueprint.toml files.",
+	"type": "object",
+	"properties": {
+		"type": {
+			"title": "Type of BP node.",
+			"description": "- `package`: Installable packages\n- `repo`: Listing that points at further repos and packages.\n- `redirect`: Points to another single resource.\n- `null`: Marks a removed resource.",
+			"type": "string",
+			"enum": ["package", "repo", "redirect", "null"]
+		},
+		"package": {
+			"type": "object",
+			"properties": {
+				"name": { "type": "string" },
+				"version": {
+					"type": "string",
+					"pattern": "^([0-9]+?\\.){2}[0-9]+$"
+				},
+				"author": {
+					"type": "object",
+					"properties": {
+						"name": { "type": "string" },
+						"prefer": {
+							"title": "Preferred URL's key.",
+							"type": "string"
+						},
+						"url": {
+							"type": "object",
+							"additionalProperties": { "type": "string" }
+						}
+					},
+					"required": [ "name" ]
+				},
+				"blueprint": {
+					"properties": {
+						"target": {
+							"title": "Install path.",
+							"type": "string"
+						},
+						"files": {
+							"title": "Directly copied files.",
+							"type": "array",
+							"items": { "type": "string" }
+						},
+						"mappedFiles": {
+							"title": "Files copied to a different path.",
+							"type": "object",
+							"additionalProperties": { "type": "string" }
+						}
+					},
+					"anyOf": [
+						{ "required": ["files"] },
+						{ "required": ["mappedFiles"] }
+					]
+				}
+			},
+			"required": [ "name", "blueprint" ]
+		}
+	},
+	"required": ["type"],
+	"allOf": [
+		{
+			"if": {
+				"properties": {
+					"type": {
+						"enum": ["package"]
+					}
+				}
+			},
+			"then": {
+				"required": ["package"],
+				"properties": {
+					"repo": false,
+					"redirect": false
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"type": {
+						"enum": ["repo"]
+					}
+				}
+			},
+			"then": {
+				"required": ["repo"],
+				"properties": {
+					"package": false,
+					"redirect": false
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"type": {
+						"enum": ["redirect"]
+					}
+				}
+			},
+			"then": {
+				"required": ["redirect"],
+				"properties": {
+					"package": false,
+					"repo": false
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"type": {
+						"enum": ["null"]
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"package": false,
+					"repo": false,
+					"redirect": false
+				}
+			}
+		}
+	]
+}

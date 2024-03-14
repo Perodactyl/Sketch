@@ -1,0 +1,15 @@
+{
+	"$schema": "../blueprint/schema.json",
+	"type": "package",
+	"package": {
+		"name": "Baller",
+		"version": "0.2.0",
+		"author": {
+			"name": "Perodactyl"
+		},
+		"blueprint": {
+			"target": "",
+			"files": []
+		}
+	}
+}
