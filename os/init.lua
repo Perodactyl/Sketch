@@ -1,3 +1,4 @@
+-- do return end
 --Clearly PixelEFI isn't flashed, so we need to run it manually.
 
 _G._PIXELSUB_V = "0.1"
@@ -14,11 +15,11 @@ end
 ---@type integer?
 local handle = fs.open("pixel.lua", "r")
 --no clue how this could happen but adding this line makes VSCode happy.
-if not handle then goto stop end
+if not handle then return end
 
 local code = fs.read(handle, 2048)
 if code == nil then --Pixel EEPROM is empty.
-	goto stop
+	return
 end
 local block2 = fs.read(handle, 2048)
 if block2 ~= nil then
@@ -30,7 +31,7 @@ fs.close(handle)
 handle = nil
 fs = nil
 
-local exe, loadError = load(code, "=<s>Pixel EEPROM")
+local exe, loadError = load(code, "=PixelSub")
 code = nil
 
 if loadError or not exe then
@@ -38,9 +39,4 @@ if loadError or not exe then
 end
 loadError = nil
 
-local success, result = xpcall(exe, debug.traceback)
-if not success then
-	error(result)
-end
-
-::stop::
+return exe() --These tail calls should deallocate all traces of the EFI chain.
