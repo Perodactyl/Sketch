@@ -1,6 +1,7 @@
 do
 	local package = {
 		searchers= {},
+		loaded= {},
 		path= {},
 	}
 	
@@ -51,7 +52,7 @@ do
 		end
 		
 		--Execute
-		local output = { xpcall(exe, debug.traceback) }
+		local output = { xpcall(exe, debug.traceback, modname) }
 		if not output[1] then
 			error(string.format("error in module %s [%s:%s]:\n%s", modname, addr, path,output[2]))
 		end

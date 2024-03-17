@@ -2,13 +2,15 @@ do
 	local os = {
 		orig= os,
 		fs= component.proxy(computer.getBootAddress()),
+		ctl= {}
 	}
+	_G.os = os
 	
 	--Set up OS require.
 	table.insert(package.searchers, function(modname, path)
 		for i, entry in ipairs(path) do
 			local value = string.match(string.format(entry,modname), "^:os:(.*)")
-			if value == "fail" then goto continue end
+			if value == nil then goto continue end
 			if os.fs.exists(value) then
 				-- error("FOUND "..value)
 				return value, os.fs.address
@@ -60,8 +62,6 @@ do
 	end
 	
 	function dofile(path, ...)
-		return loadfile(path, ...)
+		return loadfile(path)(...)
 	end
-	
-	_G.os = os
 end
